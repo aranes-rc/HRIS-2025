@@ -21,8 +21,10 @@ return new class extends Migration
             $table->date('end_date');
             $table->text('reason');
             $table->json('shift_covered');
+            $table->string('proof_of_leader_approval');
+            $table->string('proof_of_confirmed_designatory_tasks');
+            $table->string('proof_of_leave')->nullable();
             $table->enum('status', LeaveStatus::values())->default(LeaveStatus::PENDING->value);
-            $table->string('ticket_number')->unique();
             $table->timestamps();
         });
     }

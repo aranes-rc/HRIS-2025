@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->enum('shift_type', ShiftType::values());
             $table->enum('type', AttendanceType::values());
             $table->enum('work_mode', WorkMode::values())->default(WorkMode::ONSITE->value);
-            $table->string('ticket_number')->unique()->nullable();
             $table->string('screenshot_workstation_selfie')->nullable();
             $table->string('screenshot_cgc_chat')->nullable();
             $table->string('screenshot_department_chat')->nullable();

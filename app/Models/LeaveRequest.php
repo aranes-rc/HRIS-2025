@@ -17,11 +17,12 @@ class LeaveRequest extends Model
         'end_date' => 'date',
         'leave_type' => LeaveType::class,
         'status' => LeaveStatus::class,
-        'shift_covered' => 'array',
+        'shift_covered' => 'array'
     ];
 
     protected $attributes = [
-        'status' => LeaveStatus::PENDING
+        'status' => LeaveStatus::PENDING,
+        'proof_of_leave' => null,
     ];
 
     protected $fillable = [
@@ -31,19 +32,21 @@ class LeaveRequest extends Model
         'end_date',
         'reason',
         'status',
-        'ticket_number',
-        'shift_covered'
+        'shift_covered',
+        'proof_of_leader_approval',
+        'proof_of_confirmed_designatory_tasks',
+        'proof_of_leave'
     ];
 
     public function employee()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Employee::class);
     }
 
     public function scopeFilter($query, array $filters)
     {
         return $query->when($filters['leave_type'] ?? null, fn($q, $type) =>
-        $q->where('leave_type', $type))
+            $q->where('leave_type', $type))
             ->when($filters['status'] ?? null, fn($q, $status) =>
             $q->where('status', $status))
             ->when($filters['start_date'] ?? null, fn($q, $date) =>

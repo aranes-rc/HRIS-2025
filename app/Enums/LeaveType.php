@@ -15,4 +15,19 @@ enum LeaveType: string
     {
         return array_column(self::cases(), 'value');
     }
+    
+    public static function getLabel(LeaveType $case)
+    {
+        return ucfirst($case->value);
+    }
+
+    public static function options()
+    {
+        $dict = array();
+        foreach (self::cases() as $case) {
+            $dict[$case->value] = self::getLabel($case);
+        }
+
+        return $dict;
+    }
 }

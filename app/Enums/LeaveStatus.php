@@ -12,4 +12,19 @@ enum LeaveStatus: string
     {
         return array_column(self::cases(), 'value');
     }
+
+    public static function getLabel(LeaveStatus $case)
+    {
+        return ucfirst($case->value);
+    }
+
+    public static function options()
+    {
+        $dict = array();
+        foreach (self::cases() as $case) {
+            $dict[$case->value] = self::getLabel($case);
+        }
+
+        return $dict;
+    }
 }

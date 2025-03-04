@@ -29,11 +29,11 @@ class StoreAttendanceRequest extends FormRequest
             'shift_type' => 'required|in:' . implode(',', ShiftType::values()),
             'type' => 'required|in:' . implode(',', AttendanceType::values()),
             'work_mode' => 'required|in:' . implode(',', WorkMode::values()),
-            'screenshot_workstation_selfie' => 'required|image|mimes:jpg,png|max:1502',
-            'screenshot_cgc_chat' => 'required|image|mimes:jpg,png|max:1502',
-            'screenshot_department_chat' => 'required|image|mimes:jpg,png|max:1502',
-            'screenshot_team_chat' => 'required|image|mimes:jpg,png|max:1502',
-            'screenshot_group_chat' => 'required|image|mimes:jpg,png|max:1502',
+            'screenshot_workstation_selfie' => 'required|image|mimes:jpeg,jpg,png|max:1502',
+            'screenshot_cgc_chat' => 'required|image|mimes:jpeg,jpg,png|max:1502',
+            'screenshot_department_chat' => 'required|image|mimes:jpeg,jpg,png|max:1502',
+            'screenshot_team_chat' => 'required|image|mimes:jpeg,jpg,png|max:1502',
+            'screenshot_group_chat' => 'required|image|mimes:jpeg,jpg,png|max:1502',
         ];
     }
 }

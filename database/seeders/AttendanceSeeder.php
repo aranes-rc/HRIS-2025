@@ -16,7 +16,7 @@ class AttendanceSeeder extends Seeder
         $employees = Employee::all();
 
         foreach ($employees as $employee) {
-            Attendance::factory()->count(20)->create(['employee_id' => $employee->id]);
+            Attendance::factory()->count(3)->create(['employee_id' => $employee->id]);
         }
     }
 }

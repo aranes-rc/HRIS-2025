@@ -48,7 +48,7 @@ class AttendanceController extends Controller
 
         $attendances = $query->paginate(15);
 
-        return response(view('attendance.dashboard', compact("attendances")));
+        return response(view('attendance.index', compact("attendances")));
     }
 
     public function create(Request $request)
@@ -107,10 +107,13 @@ class AttendanceController extends Controller
             // Add this to the response if possible
         }
 
-        return redirect()
-            ->route('attendance.create.success')
-            ->with('success', $successMessage)
-            ->with('attendance', $attendance);
+        return response(
+            view('attendance.create-success', [
+                'success' => $successMessage,
+                'successObject' => $attendance,
+                'redirectTo' => 'attendance.index',
+            ])
+        );
     }
 
     public function show(Request $request, string $id)

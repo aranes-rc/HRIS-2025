@@ -39,12 +39,6 @@
                         <option value="{{ $key }}" {{ $attendance->type->value == $key ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
                 </x-form.select>
-
-                <!-- Ticket Number -->
-                <div class="md:col-span-2">
-                    <label class="block text-gray-700 font-medium mb-2" for="ticket_number">Ticket Number</label>
-                    <input type="text" name="ticket_number" id="ticket_number" value="{{ $attendance->ticket_number }}" class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
             </div>
             <!-- Current Proof Screenshots Preview -->
             <div class="mt-6">

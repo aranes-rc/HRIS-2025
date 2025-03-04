@@ -14,13 +14,9 @@ enum ShiftType: string
         return array_column(self::cases(), 'value');
     }
     
-    public static function getLabel(ShiftType $case) {
-        switch ($case) {
-            case self::MORNING:
-                return "Morning";
-            case self::AFTERNOON:
-                return "Afternoon";
-        }
+    public static function getLabel(ShiftType $case)
+    {
+        return ucfirst($case->value);
     }
 
     public static function options()

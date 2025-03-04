@@ -23,9 +23,6 @@
                 <p><span class="font-medium">Shift Type:</span> {{ ShiftType::getLabel($attendance->shift_type) }}</p>
                 <p><span class="font-medium">Type:</span> {{ AttendanceType::getLabel($attendance->type) }}</p>
                 <p><span class="font-medium">Work Mode:</span> {{ WorkMode::getLabel($attendance->work_mode) }}</p>
-                @if($attendance->ticket_number)
-                    <p><span class="font-medium">Ticket Number:</span> {{ $attendance->ticket_number }}</p>
-                @endif
                 <p><span class="font-medium">Created At:</span> {{ Carbon::parse($attendance->created_at)->format('M d, Y H:i') }}</p>
                 <p><span class="font-medium">Updated At:</span> {{ Carbon::parse($attendance->updated_at)->format('M d, Y H:i') }}</p>
             </div>

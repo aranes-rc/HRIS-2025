@@ -40,7 +40,6 @@ class Attendance extends Model
         'screenshot_department_chat',
         'screenshot_team_chat',
         'screenshot_group_chat',
-        'ticket_number'
     ];
 
     public function employee()

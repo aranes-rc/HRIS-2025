@@ -51,15 +51,6 @@ describe('Attendance Model', function () {
             ->and($grouped->last()->total_entries)->toBe(3);
     });
 
-    it('has unique ticket number', function () {
-        $ticket = 'TICKET-12345';
-
-        Attendance::factory()->create(['ticket_number' => $ticket]);
-
-        expect(fn() => Attendance::factory()->create(['ticket_number' => $ticket]))
-            ->toThrow(\Illuminate\Database\QueryException::class);
-    });
-
     it('prevents duplicate entries for same user/date/type', function () {
         $data = [
             'id' => random_int(1000, 9506),

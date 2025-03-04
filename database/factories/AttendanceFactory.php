@@ -27,7 +27,6 @@ class AttendanceFactory extends Factory
             'shift_type' => $this->faker->randomElement(ShiftType::cases()),
             'type' => $this->faker->randomElement(AttendanceType::cases()),
             'work_mode' => $this->faker->randomElement(WorkMode::cases()),
-            'ticket_number' => $this->faker->optional()->bothify('TICKET-#####'),
             'screenshot_workstation_selfie' => $this->faker->optional()->imageUrl(),
             'screenshot_cgc_chat' => $this->faker->optional()->imageUrl(),
             'screenshot_department_chat' => $this->faker->optional()->imageUrl(),
