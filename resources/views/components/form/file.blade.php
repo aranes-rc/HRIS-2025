@@ -11,7 +11,7 @@
     <div class="mx-auto w-full">
         <div>
             <x-form.label :name="$name" :label="$label" />
-            <input name="{{ $name }}" id="{{ $name }}" {{ $newAttributes }} />
+            <input name="{{ $name }}" id="{{ $name }}" type="file" {{ $newAttributes }} />
             <x-form.label name="" label="Accepts: {{ $accept }}" class="mt-2 opacity-60" />
             <x-form.error :name="$name" />
         </div>

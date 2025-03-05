@@ -7,6 +7,7 @@ use App\Enums\LeaveType;
 use App\Enums\ShiftType;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LeaveRequestController extends Controller
 {
@@ -19,14 +20,6 @@ class LeaveRequestController extends Controller
         $employee = $user->employee;
         
         return view('leave.create', compact('employee'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(LeaveRequest $leaveRequest)
-    {
-        //
     }
     
     /**
@@ -130,41 +123,85 @@ class LeaveRequestController extends Controller
         );
     }
 
-    public function show(Request $request, string $id)
+    public function show(Request $request, LeaveRequest $leave)
     {
-        $leave = LeaveRequest::where('id', '=', $id)->first() ?? abort(404);
         if ($request->user()->cannot('view', $leave)) abort(403);
-
-        return response()->json($leave->load('user'));
+    
+        return view('leave.show', ['leave' => $leave]);
     }
 
-    public function update(Request $request, string $id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(LeaveRequest $leave)
     {
-        if ($request->input('status') != null) abort(403);
+        if (request()->user()->cannot('update', $leave)) abort(403);
 
-        $leave = LeaveRequest::where('id', '=', $id)->first() ?? abort(404);
-        if ($request->user()->cannot('update', $leave)) abort(403);
+        return view('leave.edit', compact('leave'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, LeaveRequest $leave)
+    {
+        if ($request->user()->cannot('update', $leave)) {
+            abort(403);
+        }
 
         $validated = $request->validate([
-            'leave_type' => 'sometimes|in:' . implode(',', LeaveType::values()),
-            'start_date' => 'sometimes|date|after_or_equal:today',
-            'end_date' => 'sometimes|date|after_or_equal:start_date',
-            'reason' => 'sometimes|string|max:500',
-            'shift_covered' => 'sometimes|array',
-            'shift_covered.*' => 'string|max:255'
+            'employee_id' => 'required|exists:employees,id',
+            'leave_type' => 'required|in:' . implode(',', LeaveType::values()),
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'reason' => 'required|string|max:500',
+            'shift_covered' => 'required|array',
+            'shift_covered.*' => 'string|max:255',
+            'status' => 'sometimes|in:' . implode(',', LeaveStatus::values()),
+            'proof_of_leader_approval' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
+            'proof_of_confirmed_designatory_tasks' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
+            'proof_of_leave' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
         ]);
 
-        $leave->update($validated);
-        return response()->json($leave);
+        // Handle file uploads if they exist
+        if ($request->hasFile('proof_of_leader_approval')) {
+            $validated['proof_of_leader_approval'] = $request->file('proof_of_leader_approval')->store('leave_proofs', 'public');
+        }
+        
+        if ($request->hasFile('proof_of_confirmed_designatory_tasks')) {
+            $validated['proof_of_confirmed_designatory_tasks'] = $request->file('proof_of_confirmed_designatory_tasks')->store('leave_proofs', 'public');
+        }
+        
+        if ($request->hasFile('proof_of_leave')) {
+            $validated['proof_of_leave'] = $request->file('proof_of_leave')->store('leave_proofs', 'public');
+        }
+
+        $leave->update([
+            ...$validated,
+            'updated_by' => $request->user()->employee->id
+        ]);
+
+        return redirect()->route('leave.index')->with('success', 'Leave request updated successfully');
     }
 
-    public function destroy(Request $request, string $id)
-    {
-        $leave = LeaveRequest::where('id', '=', $id)->first() ?? abort(404);
-        if ($request->user()->cannot('delete', $leave)) abort(403);;
 
+    public function destroy(Request $request, LeaveRequest $leave)
+    {
+        if ($request->user()->cannot('delete', $leave)) abort(403);
+
+        Storage::delete([
+            $leave->proof_of_leader_approval,
+            $leave->proof_of_confirmed_designatory_tasks,
+        ]);
+
+        if ($leave->proof_of_leave) {
+            Storage::delete($leave->proof_of_leave);
+        }
+        
         $leave->delete();
-        return response()->noContent();
+        
+        return redirect()->route('leave.index')
+            ->with('success', 'Leave request deleted successfully');
     }
 
     public function updateStatus(Request $request, string $id)
@@ -179,7 +216,8 @@ class LeaveRequestController extends Controller
 
         $leave->update([
             'status' => $validated['status'],
-            'reason' => $validated['rejection_reason'] ?? $leave->reason
+            'reason' => $validated['rejection_reason'] ?? $leave->reason,
+            'updated_by' => $request->user()->employee->id
         ]);
 
         return response()->json($leave);

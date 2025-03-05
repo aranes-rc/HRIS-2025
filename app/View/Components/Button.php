@@ -10,7 +10,7 @@ class Button extends Component
 {
     public string $size;
     public string $roundness;
-    public string $text;
+    public ?string $text;
     public string $containerColor;
     public string $contentColor;
     public $sizes = [
@@ -27,7 +27,7 @@ class Button extends Component
     public function __construct(
         string $size = 'md',
         string $roundness = 'sm',
-        string $text = 'Button text',
+        ?string $text = null,
         string $containerColor = 'primary',
         string $contentColor = 'white',
     )

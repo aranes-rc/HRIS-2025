@@ -27,6 +27,7 @@ class LeaveRequest extends Model
 
     protected $fillable = [
         'employee_id',
+        'updated_by',
         'leave_type',
         'start_date',
         'end_date',
@@ -41,6 +42,11 @@ class LeaveRequest extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(Employee::class, 'updated_by');
     }
 
     public function scopeFilter($query, array $filters)

@@ -72,19 +72,19 @@
                             ]" required />
                 </div>
 
-                <x-form.file label="Acceptable Workstation Selfie" name="screenshot_workstation_selfie" type="file"
+                <x-form.file label="Acceptable Workstation Selfie" name="screenshot_workstation_selfie"
                     accept=".jpeg,.jpg,.png" class="mt-2" required />
 
-                <x-form.file label="Acceptable Company Group Chat Screenshot" name="screenshot_cgc_chat" type="file"
+                <x-form.file label="Acceptable Company Group Chat Screenshot" name="screenshot_cgc_chat"
                     accept=".jpeg,.jpg,.png" class="mt-2" required />
 
-                <x-form.file label="Acceptable Department Chat Screenshot" name="screenshot_department_chat" type="file"
+                <x-form.file label="Acceptable Department Chat Screenshot" name="screenshot_department_chat"
                     accept=".jpeg,.jpg,.png" class="mt-2" required />
 
-                <x-form.file label="Acceptable Team Chat Screenshot" name="screenshot_team_chat" type="file"
+                <x-form.file label="Acceptable Team Chat Screenshot" name="screenshot_team_chat"
                     accept=".jpeg,.jpg,.png" class="mt-2" required />
 
-                <x-form.file label="Acceptable Group Chat Screenshot" name="screenshot_group_chat" type="file"
+                <x-form.file label="Acceptable Group Chat Screenshot" name="screenshot_group_chat"
                     accept=".jpeg,.jpg,.png" class="mt-2" required />
 
                 <div class="text-sm text-gray-600">

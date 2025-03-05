@@ -10,3 +10,7 @@
     --color-accent3: #84C148;
     --font-lato: "Lato", serif;
 }
+
+[x-cloak] {
+    display: none !important;
+}

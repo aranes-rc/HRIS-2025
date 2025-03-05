@@ -124,16 +124,16 @@
 
                 <!-- Required Proof Documents -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 mt-6">
-                    <x-form.file label="Proof of Leader Approval" name="proof_of_leader_approval" type="file"
+                    <x-form.file label="Proof of Leader Approval" name="proof_of_leader_approval"
                         accept=".jpeg,.jpg,.png" required />
 
                     <x-form.file label="Proof of Confirmed Designatory Tasks"
-                        name="proof_of_confirmed_designatory_tasks" type="file" accept=".jpeg,.jpg,.png" required />
+                        name="proof_of_confirmed_designatory_tasks" accept=".jpeg,.jpg,.png" required />
                 </div>
 
                 <!-- Academic Leave Proof - Only shown when leave type is academic -->
                 <div x-show="leaveType === '{{ LeaveType::ACADEMIC->value }}'" class="mt-6">
-                    <x-form.file label="Proof of Academic Leave" name="proof_of_leave" type="file"
+                    <x-form.file label="Proof of Academic Leave" name="proof_of_leave"
                         accept=".jpeg,.jpg,.png" x-bind:required="leaveType === '{{ LeaveType::ACADEMIC->value }}'" />
                     <p class="mt-1 text-sm text-gray-600">Please upload documentation supporting your academic leave
                         request</p>

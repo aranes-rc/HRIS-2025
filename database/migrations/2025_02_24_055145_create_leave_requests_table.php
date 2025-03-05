@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('leave_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->enum('leave_type', LeaveType::values());
             $table->date('start_date');
             $table->date('end_date');

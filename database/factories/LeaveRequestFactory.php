@@ -23,6 +23,7 @@ class LeaveRequestFactory extends Factory
     {
         return [
             'employee_id' => Employee::factory(),
+            'updated_by' => Employee::factory(),
             'leave_type' => $this->faker->randomElement(LeaveType::cases()),
             'start_date' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
             'end_date' => $this->faker->dateTimeBetween('+2 days', '+1 month'),

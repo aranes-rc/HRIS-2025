@@ -5,4 +5,4 @@
     ])
 @endphp
 
-<button {{ $newAttributes }}>{{ $text }}</button>
+<button {{ $newAttributes }}>{{ $text ?? $slot }}</button>

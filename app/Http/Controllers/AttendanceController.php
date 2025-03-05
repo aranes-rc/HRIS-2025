@@ -57,6 +57,7 @@ class AttendanceController extends Controller
         $currentAttendanceType = AttendanceType::getCurrentAttendanceType();
         $employee = $request->user()->employee()->get()->first();
 
+        // TODO: Improve code
         return view('attendance.create', [
             'employee' => $employee,
             'departments' => Department::options(),

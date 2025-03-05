@@ -6,7 +6,7 @@
 @extends('components.layout.root')
 
 @section('content')
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+<div class="py-6 px-4 sm:px-6 lg:px-8 mx-auto">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-900">Leave Requests</h1>
         
@@ -82,7 +82,7 @@
     </div>
 
     <!-- Leave Requests Table -->
-    <div class="bg-white shadow-sm rounded-lg overflow-hidden" x-data="{ showDetails: null }">
+    <div class="bg-white shadow-sm rounded-lg overflow-hidden">
         <div class="min-w-full divide-y divide-gray-200">
             <div class="bg-gray-50">
                 <div class="grid grid-cols-7 gap-2 px-4 py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider">
@@ -119,15 +119,15 @@
                         </div>
                         <div class="text-sm text-gray-600">{{ $request->created_at->format('M d, Y') }}</div>
                         <div class="text-right space-x-2">
-                            <button @click="showDetails = showDetails === {{ $request->id }} ? null : {{ $request->id }}" class="text-indigo-600 hover:text-indigo-900">
-                                <span x-text="showDetails === {{ $request->id }} ? 'Hide' : 'View'"></span>
-                            </button>
+                            <a href="{{ route('leave.show', $request) }}" target="_blank">
+                                <x-button text="View" />
+                            </a>
 
                             @if(auth()->user()->isAdmin() || 
                                 (auth()->user()->isHr()) || 
                                 (auth()->user()->isEmployee() && $request->employee_id === auth()->user()->employee->id && $request->status === LeaveStatus::PENDING))
-                                <a href="{{ route('leave.edit', $request) }}" class="text-blue-600 hover:text-blue-900">
-                                    Edit
+                                <a href="{{ route('leave.edit', $request) }}">
+                                    <x-button text="Edit" />
                                 </a>
                             @endif
                             
@@ -137,51 +137,17 @@
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="{{ LeaveStatus::APPROVED->value }}">
-                                    <button type="submit" class="text-green-600 hover:text-green-900">
-                                        Approve
-                                    </button>
+                                    <x-button type="submit" text="Approve" class="bg-green-500" containerColor="green-500" />
                                 </form>
                                 
                                 <form action="{{ route('leave.update.status', $request) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="{{ LeaveStatus::REJECTED->value }}">
-                                    <button type="submit" class="text-red-600 hover:text-red-900">
-                                        Reject
-                                    </button>
+                                    <x-button type="submit" text="Reject" containerColor="red-600" />
                                 </form>
                                 @endif
                             @endif
-                        </div>
-                    </div>
-                    
-                    <!-- Expandable Details Section -->
-                    <div x-show="showDetails === {{ $request->id }}" x-cloak x-transition class="px-4 py-3 bg-gray-50 text-sm">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2">Request Details</h4>
-                                <p class="mb-1"><span class="font-medium">Reason:</span> {{ $request->reason }}</p>
-                                <p class="mb-1"><span class="font-medium">ID #:</span> {{ $request->id }}</p>
-                                @if($request->shift_covered && count($request->shift_covered) > 0)
-                                    <p class="mb-1">
-                                        <span class="font-medium">Shift Coverage:</span>
-                                        <ul class="list-disc list-inside ml-2 mt-1">
-                                            @foreach($request->shift_covered as $shift)
-                                                <li>{{ $shift }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </p>
-                                @endif
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2">Approval Information</h4>
-                                @if($request->status !== LeaveStatus::PENDING)
-                                    <p class="mb-1"><span class="font-medium">Updated:</span> {{ $request->updated_at->format('M d, Y h:i A') }}</p>
-                                    <p class="mb-1"><span class="font-medium">Updated By:</span> {{ $request->updated_by ?? 'System' }}</p>
-                                @else
-                                    <p class="text-yellow-600">Awaiting approval</p>
-                                @endif
-                            </div>
                         </div>
                     </div>
                 </div>
