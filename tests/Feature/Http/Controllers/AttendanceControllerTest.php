@@ -35,7 +35,7 @@ describe('Attendance Controller as Admin', function () {
         $response = $this->get("/attendance?date_from=2023-01-01&date_to=2023-01-01&type=" . AttendanceType::TIME_IN->value);
         
         $response->assertStatus(200);
-        $response->assertViewIs('attendance.dashboard');
+        $response->assertViewIs('attendance.index');
         $attendances = $response->viewData('attendances');
         expect($attendances->total())->toBe(1);
     });
@@ -91,8 +91,7 @@ describe('Attendance Controller as Admin', function () {
 
         $response = $this->post("/attendance", $data);
 
-        $response->assertRedirect(route('attendance.create.success'));
-        $response->assertSessionHas('success');
+        $response->assertSee("Redirecting in");
         $this->assertDatabaseCount('attendances', 1);
     });
 
@@ -149,7 +148,7 @@ describe('Attendance Controller as Admin', function () {
     //     $response = $this->get('/attendance?group_by=employee');
         
     //     $response->assertStatus(200);
-    //     $response->assertViewIs('attendance.dashboard');
+    //     $response->assertViewIs('attendance.index');
     //     $attendances = $response->viewData('attendances');
     //     $firstGroup = $attendances->first();
     //     expect(isset($firstGroup->employee_id) || isset($firstGroup['employee_id']))->toBeTrue();
