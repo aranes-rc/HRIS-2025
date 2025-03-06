@@ -1,6 +1,6 @@
 @php
     use App\Enums\LeaveType;
-    use App\Enums\LeaveStatus;
+    use App\Enums\RequestStatus;
     use App\Enums\ShiftType;
 @endphp
 
@@ -80,7 +80,7 @@
                 <!-- Status (only for HR/Admin) -->
                 @if(auth()->user()->isHr() || auth()->user()->isAdmin())
                     <x-form.select name="status" label="Status">
-                        @foreach (LeaveStatus::options() as $key => $value)
+                        @foreach (RequestStatus::options() as $key => $value)
                             <option value="{{ $key }}" {{ $leave->status->value == $key ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </x-form.select>

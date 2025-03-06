@@ -17,8 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => CheckUserRole::class,
-            'flashed.success' => CheckCreatedAttendance::class,
+            'role' => CheckUserRole::class
         ]);
 
         $middleware->api(prepend: [

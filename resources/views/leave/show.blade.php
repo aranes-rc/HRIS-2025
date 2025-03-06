@@ -1,6 +1,6 @@
 @php
 use App\Enums\LeaveType;
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Enums\ShiftType;
 use Illuminate\Support\Str;
 @endphp
@@ -76,7 +76,7 @@ use Illuminate\Support\Str;
                 <div>
                     <x-form.label name="status" label="Status" />
                     <p class="mt-2 px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
-                        {{ LeaveStatus::getLabel($leave->status) }}
+                        {{ RequestStatus::getLabel($leave->status) }}
                     </p>
                 </div>
             </div>

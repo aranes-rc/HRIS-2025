@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Enums\LeaveType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,12 +16,12 @@ class LeaveRequest extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'leave_type' => LeaveType::class,
-        'status' => LeaveStatus::class,
+        'status' => RequestStatus::class,
         'shift_covered' => 'array'
     ];
 
     protected $attributes = [
-        'status' => LeaveStatus::PENDING,
+        'status' => RequestStatus::PENDING,
         'proof_of_leave' => null,
     ];
 
@@ -65,16 +65,16 @@ class LeaveRequest extends Model
 
     public function isPending()
     {
-        return $this->status == LeaveStatus::PENDING;
+        return $this->status == RequestStatus::PENDING;
     }
 
     public function isRejected()
     {
-        return $this->status == LeaveStatus::REJECTED;
+        return $this->status == RequestStatus::REJECTED;
     }
 
     public function isApproved()
     {
-        return $this->status == LeaveStatus::APPROVED;
+        return $this->status == RequestStatus::APPROVED;
     }
 }

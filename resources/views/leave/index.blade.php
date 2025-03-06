@@ -1,5 +1,5 @@
 @php
-    use App\Enums\LeaveStatus;
+    use App\Enums\RequestStatus;
     use App\Enums\LeaveType;
 @endphp
 
@@ -40,7 +40,7 @@
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select id="status" name="status" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
                     <option value="">All Statuses</option>
-                    @foreach (LeaveStatus::options() as $key => $value)
+                    @foreach (RequestStatus::options() as $key => $value)
                         <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
                 </select>
@@ -110,11 +110,11 @@
                         <div>
                             <span @class([
                                 'px-2 py-1 text-xs font-medium rounded-full',
-                                'bg-yellow-100 text-yellow-800' => $request->status === LeaveStatus::PENDING,
-                                'bg-green-100 text-green-800' => $request->status === LeaveStatus::APPROVED,
-                                'bg-red-100 text-red-800' => $request->status === LeaveStatus::REJECTED,
+                                'bg-yellow-100 text-yellow-800' => $request->status === RequestStatus::PENDING,
+                                'bg-green-100 text-green-800' => $request->status === RequestStatus::APPROVED,
+                                'bg-red-100 text-red-800' => $request->status === RequestStatus::REJECTED,
                             ])>
-                                {{ LeaveStatus::getLabel($request->status) }}
+                                {{ RequestStatus::getLabel($request->status) }}
                             </span>
                         </div>
                         <div class="text-sm text-gray-600">{{ $request->created_at->format('M d, Y') }}</div>
@@ -125,25 +125,25 @@
 
                             @if(auth()->user()->isAdmin() || 
                                 (auth()->user()->isHr()) || 
-                                (auth()->user()->isEmployee() && $request->employee_id === auth()->user()->employee->id && $request->status === LeaveStatus::PENDING))
+                                (auth()->user()->isEmployee() && $request->employee_id === auth()->user()->employee->id && $request->status === RequestStatus::PENDING))
                                 <a href="{{ route('leave.edit', $request) }}">
                                     <x-button text="Edit" />
                                 </a>
                             @endif
                             
                             @if(auth()->user()->isAdmin() || auth()->user()->isHr())
-                                @if($request->status === LeaveStatus::PENDING)
+                                @if($request->status === RequestStatus::PENDING)
                                 <form action="{{ route('leave.update.status', $request) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <input type="hidden" name="status" value="{{ LeaveStatus::APPROVED->value }}">
+                                    <input type="hidden" name="status" value="{{ RequestStatus::APPROVED->value }}">
                                     <x-button type="submit" text="Approve" class="bg-green-500" containerColor="green-500" />
                                 </form>
                                 
                                 <form action="{{ route('leave.update.status', $request) }}" method="POST" class="inline">
                                     @csrf
                                     @method('PATCH')
-                                    <input type="hidden" name="status" value="{{ LeaveStatus::REJECTED->value }}">
+                                    <input type="hidden" name="status" value="{{ RequestStatus::REJECTED->value }}">
                                     <x-button type="submit" text="Reject" containerColor="red-600" />
                                 </form>
                                 @endif

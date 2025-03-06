@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Enums\LeaveType;
 use App\Enums\ShiftType;
 use App\Models\LeaveRequest;
@@ -30,31 +30,24 @@ class LeaveRequestController extends Controller
         $user = $request->user();
         $validated = $request->validate([
             'leave_type' => 'sometimes|in:' . implode(',', LeaveType::values()),
-            'status' => 'sometimes|in:' . implode(',', LeaveStatus::values()),
+            'status' => 'sometimes|in:' . implode(',', RequestStatus::values()),
             'start_date' => 'sometimes|date',
             'end_date' => 'sometimes|date|after:start_date',
             'employee_id' => 'sometimes|exists:employees,id'
         ]);
 
         // Admin sees all leave requests with full access.
-        if ($user->isAdmin()) {
-            $leaveRequests = LeaveRequest::with('Employee')
+        if ($user->isEmployee()) {
+            $leaveRequests = LeaveRequest::where('employee_id', $user->employee->id)
+                ->with('Employee')
                 ->filter($validated)
-                ->latest();
-        }
-        // HR sees all requests so they can approve/reject,
-        // but if they need to edit, they only edit their own details (excluding status).
-        elseif ($user->isHr()) {
-            $leaveRequests = LeaveRequest::with('Employee')
-            ->filter($validated)
                 ->latest();
         }
         // Employees see only their own leave requests.
         else {
-            $leaveRequests = LeaveRequest::where('employee_id', $user->employee->id)
-                                         ->with('Employee')
-                                         ->filter($validated)
-                                         ->latest();
+            $leaveRequests = LeaveRequest::with('Employee')
+                ->filter($validated)
+                ->latest();
         }
 
         return view('leave.index', ['leave_requests' => $leaveRequests->paginate(15)]);
@@ -101,7 +94,7 @@ class LeaveRequestController extends Controller
             'shift_covered' => $validated['shift_covered'],
             'proof_of_leader_approval' => $proofLeaderPath,
             'proof_of_confirmed_designatory_tasks' => $proofTasksPath,
-            'status' => LeaveStatus::PENDING
+            'status' => RequestStatus::PENDING
         ];
         
         // Handle optional proof_of_leave file
@@ -157,7 +150,7 @@ class LeaveRequestController extends Controller
             'reason' => 'required|string|max:500',
             'shift_covered' => 'required|array',
             'shift_covered.*' => 'string|max:255',
-            'status' => 'sometimes|in:' . implode(',', LeaveStatus::values()),
+            'status' => 'sometimes|in:' . implode(',', RequestStatus::values()),
             'proof_of_leader_approval' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
             'proof_of_confirmed_designatory_tasks' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
             'proof_of_leave' => 'sometimes|file|mimes:jpeg,jpg,png,pdf',
@@ -210,8 +203,8 @@ class LeaveRequestController extends Controller
         if ($request->user()->cannot('updateStatus', $leave)) abort(403);
 
         $validated = $request->validate([
-            'status' => 'required|in:' . implode(',', LeaveStatus::values()),
-            'rejection_reason' => 'required_if:status,'.LeaveStatus::REJECTED->value.'|string|max:255'
+            'status' => 'required|in:' . implode(',', RequestStatus::values()),
+            'rejection_reason' => 'required_if:status,'.RequestStatus::REJECTED->value.'|string|max:255'
         ]);
 
         $leave->update([

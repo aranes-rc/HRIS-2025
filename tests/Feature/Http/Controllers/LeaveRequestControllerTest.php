@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Enums\LeaveType;
 use App\Enums\ShiftType;
 use App\Enums\UserRole;
@@ -51,7 +51,7 @@ describe('LeaveRequestController as Admin', function () {
         $leave = LeaveRequest::factory()->create();
         $response = $this->put(route('leave.update', $leave), [
             ...$this->leaveData,
-            'status' => LeaveStatus::APPROVED->value
+            'status' => RequestStatus::APPROVED->value
         ]);
         $response->assertRedirect(route('leave.index'));
     });
@@ -66,10 +66,10 @@ describe('LeaveRequestController as Admin', function () {
     it('can update status of any request', function () {
         $leave = LeaveRequest::factory()->create();
         $response = $this->patch(route('leave.update.status', $leave), [
-            'status' => LeaveStatus::APPROVED->value
+            'status' => RequestStatus::APPROVED->value
         ]);
         $response->assertOk();
-        expect($leave->fresh()->status)->toBe(LeaveStatus::APPROVED);
+        expect($leave->fresh()->status)->toBe(RequestStatus::APPROVED);
     });
 });
 
@@ -90,11 +90,11 @@ describe('LeaveRequestController as HR', function () {
     it('can update status of requests', function () {
         $leave = LeaveRequest::factory()->create();
         $response = $this->patch(route('leave.update.status', $leave), [
-            'status' => LeaveStatus::REJECTED->value,
+            'status' => RequestStatus::REJECTED->value,
             'rejection_reason' => 'Insufficient documentation'
         ]);
         $response->assertOk();
-        expect($leave->fresh()->status)->toBe(LeaveStatus::REJECTED);
+        expect($leave->fresh()->status)->toBe(RequestStatus::REJECTED);
     });
 
     it('cannot delete leave requests', function () {
@@ -127,14 +127,14 @@ describe('LeaveRequestController as Employee', function () {
         $response->assertOk();
         $this->assertDatabaseHas('leave_requests', [
             'employee_id' => $this->employee->id,
-            'status' => LeaveStatus::PENDING->value
+            'status' => RequestStatus::PENDING->value
         ]);
     });
 
     it('can update own pending requests', function () {
         $leave = LeaveRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'status' => LeaveStatus::PENDING
+            'status' => RequestStatus::PENDING
         ]);
         $response = $this->put(route('leave.update', $leave), [
             ...$this->leaveData,
@@ -147,7 +147,7 @@ describe('LeaveRequestController as Employee', function () {
     it('cannot update approved requests', function () {
         $leave = LeaveRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'status' => LeaveStatus::APPROVED
+            'status' => RequestStatus::APPROVED
         ]);
         $response = $this->put(route('leave.update', $leave), $this->leaveData);
         $response->assertForbidden();
@@ -156,7 +156,7 @@ describe('LeaveRequestController as Employee', function () {
     it('can delete own pending requests', function () {
         $leave = LeaveRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'status' => LeaveStatus::PENDING
+            'status' => RequestStatus::PENDING
         ]);
         $response = $this->delete(route('leave.destroy', $leave));
         $response->assertRedirect();
@@ -166,7 +166,7 @@ describe('LeaveRequestController as Employee', function () {
     it('cannot delete approved requests', function () {
         $leave = LeaveRequest::factory()->create([
             'employee_id' => $this->employee->id,
-            'status' => LeaveStatus::APPROVED
+            'status' => RequestStatus::APPROVED
         ]);
         $response = $this->delete(route('leave.destroy', $leave));
         $response->assertForbidden();
@@ -175,7 +175,7 @@ describe('LeaveRequestController as Employee', function () {
     it('cannot update status', function () {
         $leave = LeaveRequest::factory()->create(['employee_id' => $this->employee->id]);
         $response = $this->patch(route('leave.update.status', $leave), [
-            'status' => LeaveStatus::APPROVED->value
+            'status' => RequestStatus::APPROVED->value
         ]);
         $response->assertForbidden();
     });

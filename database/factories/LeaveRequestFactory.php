@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\AttendanceType;
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Enums\LeaveType;
 use App\Enums\ShiftType;
 use App\Models\Employee;
@@ -29,7 +29,7 @@ class LeaveRequestFactory extends Factory
             'end_date' => $this->faker->dateTimeBetween('+2 days', '+1 month'),
             'reason' => $this->faker->paragraph,
             'shift_covered' => $this->faker->randomElements(ShiftType::values(), 1),
-            'status' => $this->faker->randomElement(LeaveStatus::cases()),
+            'status' => $this->faker->randomElement(RequestStatus::cases()),
             'proof_of_leader_approval' => $this->faker->imageUrl(),
             'proof_of_confirmed_designatory_tasks' => $this->faker->imageUrl(),
             'proof_of_leave' => $this->faker->optional()->imageUrl(),

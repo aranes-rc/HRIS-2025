@@ -4,6 +4,7 @@ use App\Enums\UserRole;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\WorkRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     Route::patch('/leave/{id}/status', [LeaveRequestController::class, 'updateStatus'])
         ->name('leave.update.status');
+
+    Route::resource('work-request', WorkRequestController::class);
 });

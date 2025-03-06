@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\LeaveStatus;
+use App\Enums\RequestStatus;
 use App\Models\LeaveRequest;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
