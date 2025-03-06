@@ -1,12 +1,15 @@
 @php
     use App\Enums\WorkType;
     use App\Enums\ShiftRequest;
+    use App\Enums\RequestStatus;
 @endphp
 
 @extends('components.layout.root')
 
 @section('content')
-<div class="py-8 px-6 max-w-4xl mx-auto">
+<div class="py-8 px-6 max-w-4xl mx-auto" x-cloak x-data="{ previewImage: null, isPdf: false }">
+    @include('components.doc-preview')
+
     <div class="mb-8 flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Edit Work Request</h1>
@@ -64,12 +67,31 @@
                 </x-form.select>
                 
                 <!-- Shift Request -->
-                <x-form.select name="shift_request" label="Shift Request" required>
+                <x-form.select name="status" label="Status" required>
                     <option value="" selected disabled>Select Shift Request</option>
                     @foreach (ShiftRequest::options() as $key => $value)
                         <option value="{{ $key }}" {{ old('shift_request', $workRequest->shift_request->value) == $key ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
                 </x-form.select>
+
+                
+                <!-- Status -->
+                @if (auth()->user()->isEmployee())
+                    <div>
+                        <x-form.label name="status" label="Status" />
+                        <div class="mt-2 p-3 bg-gray-50 rounded-md text-gray-700">
+                            {{ RequestStatus::getLabel(old('status', $workRequest->status)) }}
+                        </div>
+                    </div>
+                @else
+                    <x-form.select name="status" label="Status">
+                        <option value="" disabled>Select Status</option>
+                        @foreach (RequestStatus::options() as $key => $value)
+                            <option value="{{ $key }}" {{ old('status', $workRequest->status->value) == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </x-form.select>
+                @endif
+
 
                 <!-- Reason -->
                 <div class="md:col-span-2">
@@ -101,7 +123,7 @@
                             <button 
                                 type="button" 
                                 class="text-sm text-primary hover:text-primary/80 font-medium"
-                                @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_team_leader_approval) }}', 'Team Leader Approval')"
+                                @click="previewImage = '{{ Storage::url($workRequest->proof_of_team_leader_approval) }}'; isPdf = false"
                             >
                                 Preview
                             </button>
@@ -126,7 +148,7 @@
                             <button 
                                 type="button" 
                                 class="text-sm text-primary hover:text-primary/80 font-medium"
-                                @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_group_leader_approval) }}', 'Group Leader Approval')"
+                                @click="previewImage = '{{ Storage::url($workRequest->proof_of_group_leader_approval) }}'; isPdf = false"
                             >
                                 Preview
                             </button>
@@ -151,7 +173,7 @@
                             <button 
                                 type="button" 
                                 class="text-sm text-primary hover:text-primary/80 font-medium"
-                                @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_school_approval) }}', 'School Approval')"
+                                @click="previewImage = '{{ Storage::url($workRequest->proof_of_school_approval) }}'; isPdf = false"
                             >
                                 Preview
                             </button>
@@ -202,23 +224,6 @@
                 <x-button type="submit" text="Update Request" containerColor="primary" contentColor="white" />
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Image Preview Modal -->
-<div x-data="{ showModal: false, imageUrl: '', title: '' }" x-show="showModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-90" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4" x-cloak>
-    <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div class="flex justify-between items-center px-6 py-4 border-b">
-            <h3 class="text-lg font-medium text-gray-900" x-text="title"></h3>
-            <button @click="showModal = false" class="text-gray-400 hover:text-gray-500">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <div class="p-6 overflow-auto" style="max-height: calc(90vh - 80px);">
-            <img :src="imageUrl" class="max-w-full h-auto mx-auto" />
-        </div>
     </div>
 </div>
 @endsection

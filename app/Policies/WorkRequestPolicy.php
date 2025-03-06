@@ -38,17 +38,4 @@ class WorkRequestPolicy
     {
         return $this->update($user, $workRequest);
     }
-
-    public function scopeFilter($query, array $filters)
-    {
-        return $query->when($filters['status'] ?? null, fn($q, $status) =>
-                $q->where('status', $status))
-            ->when($filters['work_type'] ?? null, fn($q, $workType) =>
-                $q->where('work_type', $workType))
-            ->when($filters['date_from'] ?? null, fn($q, $dateFrom) =>
-                $q->whereDate('request_date', '>=', $dateFrom))
-            ->when($filters['date_to'] ?? null, fn($q, $dateTo) =>
-                $q->whereDate('request_date', '<=', $dateTo));
-    }
-
 }

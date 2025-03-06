@@ -6,7 +6,9 @@
 @extends('components.layout.root')
 
 @section('content')
-<div class="py-8 px-6 max-w-4xl mx-auto">
+<div class="py-8 px-6 max-w-4xl mx-auto" id="show-parent" x-cloak x-data="{ previewImage: null, isPdf: false }">
+    @include('components.doc-preview')
+    
     <div class="mb-8 flex items-center justify-between">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Work Request Details</h1>
@@ -112,9 +114,9 @@
                                 </svg>
                                 <span class="ml-2 text-sm text-gray-700">Document uploaded</span>
                                 <button 
-                                    type="button" 
+                                    type="button"
                                     class="ml-2 text-sm text-primary hover:text-primary/80 font-medium"
-                                    @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_team_leader_approval) }}', 'Team Leader Approval')"
+                                    @click="previewImage = '{{ Storage::url($workRequest->proof_of_team_leader_approval) }}'; isPdf = false"
                                 >
                                     Preview
                                 </button>
@@ -135,7 +137,7 @@
                                 <button 
                                     type="button" 
                                     class="ml-2 text-sm text-primary hover:text-primary/80 font-medium"
-                                    @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_group_leader_approval) }}', 'Group Leader Approval')"
+                                    @click="previewImage = '{{ Storage::url($workRequest->proof_of_group_leader_approval) }}'; isPdf = false"
                                 >
                                     Preview
                                 </button>
@@ -156,7 +158,7 @@
                                 <button 
                                     type="button" 
                                     class="ml-2 text-sm text-primary hover:text-primary/80 font-medium"
-                                    @click="openImagePreview('{{ asset('storage/' . $workRequest->proof_of_school_approval) }}', 'School Approval')"
+                                    @click="previewImage = '{{ Storage::url($workRequest->proof_of_school_approval) }}'; isPdf = false"
                                 >
                                     Preview
                                 </button>
@@ -194,43 +196,4 @@
         </div>
     </div>
 </div>
-
-<!-- Image Preview Modal -->
-<div x-data="{ showModal: false, imageUrl: '', title: '' }" x-show="showModal" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-90" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4" x-cloak>
-    <div @click.away="showModal = false" class="bg-white rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div class="flex justify-between items-center px-6 py-4 border-b">
-            <h3 class="text-lg font-medium text-gray-900" x-text="title"></h3>
-            <button @click="showModal = false" class="text-gray-400 hover:text-gray-500">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <div class="p-6 overflow-auto" style="max-height: calc(90vh - 80px);">
-            <img :src="imageUrl" class="max-w-full h-auto mx-auto" />
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('scripts')
-<script>
-    document.addEventListener('alpine:init', () => {
-        window.openImagePreview = function(url, title) {
-            // Check if the file is an image
-            const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
-            
-            if (isImage) {
-                // Open in modal
-                const modal = document.querySelector('[x-data="{ showModal: false, imageUrl: \'\', title: \'\' }"]').__x.$data;
-                modal.imageUrl = url;
-                modal.title = title;
-                modal.showModal = true;
-            } else {
-                // Open in new tab for non-image files
-                window.open(url, '_blank');
-            }
-        };
-    });
-</script>
 @endsection
