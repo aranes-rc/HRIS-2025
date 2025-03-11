@@ -32,6 +32,7 @@ class Attendance extends Model
 
     protected $fillable = [
         'employee_id',
+        'updated_by',
         'shift_type',
         'type',
         'work_mode',
@@ -47,6 +48,11 @@ class Attendance extends Model
         return $this->belongsTo(Employee::class);
     }
 
+    public function updatedBy()
+    {
+        return $this->belongsTo(Employee::class, 'updated_by');
+    }
+
     public function scopeFilter($query, array $filters)
     {
         return $query->when(isset($filters['date_from']), fn($q) => 
@@ -55,6 +61,8 @@ class Attendance extends Model
                 $q->where('created_at', '<=', $filters['date_to']))
             ->when(isset($filters['employee_id']), fn($q) => 
                 $q->where('employee_id', $filters['employee_id']))
+            ->when(isset($filters['updated_by']), fn($q) => 
+                $q->where('updated_by', $filters['updated_by']))
             ->when(isset($filters['shift_type']), fn($q) => 
                 $q->where('shift_type', $filters['shift_type']))
             ->when(isset($filters['type']), fn($q) => 
