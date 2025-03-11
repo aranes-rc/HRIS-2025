@@ -2,6 +2,7 @@
 
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceType;
+use App\Enums\RequestStatus;
 use App\Enums\ShiftType;
 use App\Enums\WorkMode;
 use Illuminate\Database\Migrations\Migration;
@@ -15,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
             $table->foreignId('updated_by')->constrained('employees');
+            $table->string('status')->default(RequestStatus::PENDING->value);
             $table->enum('shift_type', ShiftType::values());
             $table->enum('type', AttendanceType::values());
             $table->enum('work_mode', WorkMode::values())->default(WorkMode::ONSITE->value);

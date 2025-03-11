@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceType;
+use App\Enums\RequestStatus;
 use App\Enums\ShiftType;
 use App\Enums\WorkMode;
 use App\Models\Employee;
@@ -25,6 +26,7 @@ class AttendanceFactory extends Factory
         return [
             'employee_id' => Employee::factory(),
             'updated_by' => Employee::factory(),
+            'status' => fake()->randomElement(RequestStatus::cases()),
             'shift_type' => $this->faker->randomElement(ShiftType::cases()),
             'type' => $this->faker->randomElement(AttendanceType::cases()),
             'work_mode' => $this->faker->randomElement(WorkMode::cases()),

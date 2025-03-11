@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ShiftType;
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceType;
+use App\Enums\RequestStatus;
 use App\Enums\WorkMode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,7 @@ class Attendance extends Model
     protected $fillable = [
         'employee_id',
         'updated_by',
+        'status',
         'shift_type',
         'type',
         'work_mode',
@@ -63,6 +65,8 @@ class Attendance extends Model
                 $q->where('employee_id', $filters['employee_id']))
             ->when(isset($filters['updated_by']), fn($q) => 
                 $q->where('updated_by', $filters['updated_by']))
+            ->when(isset($filters['status']), fn($q) => 
+                $q->where('status', $filters['status']))
             ->when(isset($filters['shift_type']), fn($q) => 
                 $q->where('shift_type', $filters['shift_type']))
             ->when(isset($filters['type']), fn($q) => 
@@ -70,7 +74,20 @@ class Attendance extends Model
             ->when(isset($filters['work_mode']), fn($q) => 
                 $q->where('work_mode', $filters['work_mode']));
     }
+    public function isPending()
+    {
+        return $this->status === RequestStatus::PENDING;
+    }
 
+    public function isApproved()
+    {
+        return $this->status === RequestStatus::APPROVED;
+    }
+
+    public function isRejected()
+    {
+        return $this->status === RequestStatus::REJECTED;
+    }
     public function scopeGroupedData($query, ?string $groupBy)
     {
         // TODO: Improve this shit
