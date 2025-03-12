@@ -87,6 +87,7 @@ class AttendanceController extends Controller
         );
 
         $attendance = Attendance::create([
+            'updated_by' => $request->user()->employee->id,
             ...$validated,
             ...$paths
         ]);

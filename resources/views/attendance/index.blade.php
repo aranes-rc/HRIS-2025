@@ -2,6 +2,7 @@
     use App\Enums\ShiftType;
     use App\Enums\AttendanceType;
     use App\Enums\WorkMode;
+    use App\Enums\AttStatus;
 @endphp
 
 @extends('components.layout.auth')
@@ -57,10 +58,12 @@
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shift</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Work Mode</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated By</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Proofs</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
         </tr>
@@ -72,12 +75,34 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
             {{ $attendance->employee->getFullName() }}
           </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            @php
+    $statusValue = is_object($attendance->status) ? $attendance->status->value : $attendance->status;
+@endphp
+
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+    @if($statusValue === AttStatus::APPROVED->value)
+        bg-green-100 text-green-800
+    @elseif($statusValue === AttStatus::REJECTED->value)
+        bg-red-100 text-red-800
+    @elseif($statusValue === AttStatus::PENDING->value)
+        bg-yellow-100 text-yellow-800
+    @else
+        bg-gray-100 text-gray-800
+    @endif
+">
+    {{ AttStatus::getLabel($attendance->status) }}
+</span>
+        </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm capitalize text-gray-900">{{ ShiftType::getLabel($attendance->shift_type) }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm capitalize text-gray-900">{{ AttendanceType::getLabel($attendance->type) }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm capitalize text-gray-900">{{ WorkMode::getLabel($attendance->work_mode) }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
             {{ \Carbon\Carbon::parse($attendance->created_at)->format('M d, Y H:i') }}
           </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            {{ $attendance->updatedBy->getFullName() }}
+        </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm">
             <!-- Buttons for Screenshot Previews -->
             <div class="mt-2 flex flex-wrap gap-2">
