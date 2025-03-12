@@ -4,6 +4,7 @@ namespace App\Enums;
 
 use Illuminate\Support\Carbon;
 
+
 enum AttendanceType: string
 {
     case TIME_IN = 'time_in';
