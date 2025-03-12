@@ -16,9 +16,7 @@ class LeaveRequestSeeder extends Seeder
         $employees = Employee::all();
 
         foreach ($employees as $employee) {
-            LeaveRequest::factory()
-                ->count(3)
-                ->create(['employee_id' => $employee->id]);
+            LeaveRequest::factory()->create(['employee_id' => $employee->id]);
         }
     }
 }

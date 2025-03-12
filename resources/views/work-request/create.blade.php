@@ -3,7 +3,9 @@
     use App\Enums\ShiftRequest;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Create Work Request @endsection
 
 @section('content')
 <div class="py-8 px-6 max-w-4xl mx-auto">

@@ -17,9 +17,7 @@ class DocumentSeeder extends Seeder
         $employees = Employee::all();
 
         foreach ($employees as $employee) {
-            Document::factory()
-                ->count(3)
-                ->create(['employee_id' => $employee->id]);
+            Document::factory()->create(['employee_id' => $employee->id]);
         }
     }
 }

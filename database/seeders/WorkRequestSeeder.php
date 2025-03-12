@@ -17,9 +17,7 @@ class WorkRequestSeeder extends Seeder
         $employees = Employee::all();
 
         foreach ($employees as $employee) {
-            WorkRequest::factory()
-                ->count(3)
-                ->create(['employee_id' => $employee->id]);
+            WorkRequest::factory()->create(['employee_id' => $employee->id]);
         }
     }
 }

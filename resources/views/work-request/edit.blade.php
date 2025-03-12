@@ -4,7 +4,9 @@
     use App\Enums\RequestStatus;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Edit Work Request #{{ $workRequest->id }} @endsection
 
 @section('content')
 <div class="py-8 px-6 max-w-4xl mx-auto" x-cloak x-data="{ previewImage: null, isPdf: false }">

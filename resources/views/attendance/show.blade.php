@@ -7,7 +7,7 @@
 
 @extends('components.layout.auth')
 
-@section('title') Attendance @endsection
+@section('title') Attendance #{{ $attendance->id }} @endsection
 
 @section('content')
 <div class="container mx-auto p-6" x-data="previewModal()">

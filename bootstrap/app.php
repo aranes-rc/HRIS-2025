@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Middleware\CheckCreatedAttendance;
 use App\Http\Middleware\CheckUserRole;
+use App\Http\Middleware\HasUserRole;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => CheckUserRole::class
+            'role' => CheckUserRole::class,
+            'role.switch' => HasUserRole::class,
         ]);
 
         $middleware->api(prepend: [

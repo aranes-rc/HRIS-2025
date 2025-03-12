@@ -3,7 +3,9 @@
     use App\Enums\WorkType;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Work Request #{{ $workRequest->id }} @endsection
 
 @section('content')
 <div class="py-8 px-6 max-w-4xl mx-auto" id="show-parent" x-cloak x-data="{ previewImage: null, isPdf: false }">
@@ -30,9 +32,9 @@
         <div class="space-y-8">
             <!-- Status Banner -->
             <div class="rounded-lg p-4 flex items-center space-x-4
-                @if($workRequest->isPending()) bg-yellow-50 border border-yellow-200
-                @elseif($workRequest->isApproved()) bg-green-50 border border-green-200
-                @elseif($workRequest->isRejected()) bg-red-50 border border-red-200
+                @if($workRequest->isPending()) bg-yellow-50 border-yellow-200
+                @elseif($workRequest->isApproved()) bg-green-50 border-green-200
+                @elseif($workRequest->isRejected()) bg-red-50 border-red-200
                 @endif">
                 <div class="flex-shrink-0">
                     @if($workRequest->isPending())

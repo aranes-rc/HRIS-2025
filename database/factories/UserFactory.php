@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Enums\UserRole;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use App\Enums\UserRole;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -13,9 +14,11 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     /**
-     * The current password being used by the factory.
+     * The name of the factory's corresponding model.
+     *
+     * @var string
      */
-    protected static ?string $password;
+    protected $model = User::class;
 
     /**
      * Define the model's default state.
@@ -27,15 +30,64 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => static::$password ??= Hash::make('password'),
-            'role' => fake()->randomElement(UserRole::values()),
             'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'roles' => [UserRole::EMPLOYEE->value],
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Indicate that the user should have admin role.
+     *
+     * @return $this
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'roles' => [UserRole::ADMIN->value],
+        ]);
+    }
+
+    /**
+     * Indicate that the user should have HR role.
+     *
+     * @return $this
+     */
+    public function hr(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'roles' => [UserRole::HR->value],
+        ]);
+    }
+
+    /**
+     * Indicate that the user should have employee role.
+     *
+     * @return $this
+     */
+    public function employee(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'roles' => [UserRole::EMPLOYEE->value],
+        ]);
+    }
+
+    /**
+     * Indicate that the user should have multiple roles.
+     *
+     * @param array $roles
+     * @return $this
+     */
+    public function withRoles(array $roles): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'roles' => $roles,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is unverified.
      */
     public function unverified(): static
     {

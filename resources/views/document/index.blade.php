@@ -3,7 +3,9 @@
     use App\Enums\RequestStatus;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Document Dashboard @endsection
 
 @section('content')
 <div class="py-8 px-6 sm:px-8 lg:px-10 max-w-7xl mx-auto">

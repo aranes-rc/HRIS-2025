@@ -1,10 +1,8 @@
 @extends('components.layout.auth')
 
-@section('title') Attendance @endsection
+@section('title') Time In / Time Out @endsection
 
 @section('content')
-    <x-slot name="header">Attendance</x-slot>
-
     <div>
         <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8">
             <div class="flex gap-4 mb-8 divide-gray-200 items-center">

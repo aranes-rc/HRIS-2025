@@ -4,7 +4,9 @@
     use App\Enums\Department;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Create Leave Request @endsection
 
 @section('content')
 <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">

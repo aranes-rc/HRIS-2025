@@ -4,7 +4,9 @@
     use App\Enums\WorkType;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Work Request Dashboard @endsection
 
 @section('content')
 <div class="py-8 px-6 max-w-7xl mx-auto">

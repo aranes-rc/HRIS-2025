@@ -2,7 +2,9 @@
     use App\Enums\DocumentType;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Create Document @endsection
 
 @section('content')
 <div class="py-8 px-6 sm:px-8 lg:px-10 max-w-3xl mx-auto">

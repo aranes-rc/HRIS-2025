@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UserRoleSwitchController;
 use App\Http\Controllers\WorkRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,12 +23,14 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get("/", function (Request $request) {
-        $role = $request->user()->role;
+        $role = $request->user()->getActiveRole();
 
         return match ($role) {
-            UserRole::EMPLOYEE => view('employee.dashboard'),
-            UserRole::HR => view('hr.dashboard'),
-            UserRole::ADMIN => view('admin.dashboard'),
+            UserRole::EMPLOYEE->value => view('dashboard.employee'),
+            UserRole::HR->value => view('dashboard.hr'),
+            UserRole::ADMIN->value => view('dashboard.admin'),
+            UserRole::GROUP_LEADER->value => view('dashboard.gl'),
+            UserRole::TEAM_LEADER->value => view('dashboard.tl'),
             default => abort(403),
         };
     })->name("dashboard");
@@ -46,4 +49,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::resource('work-request', WorkRequestController::class);
 
     Route::resource('document', DocumentController::class);
+
+    Route::post('/role/switch', [UserRoleSwitchController::class, 'switch'])
+        ->middleware('role.switch')
+        ->name('role.switch');
 });

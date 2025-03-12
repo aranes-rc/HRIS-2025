@@ -5,7 +5,9 @@ use App\Enums\ShiftType;
 use Illuminate\Support\Str;
 @endphp
 
-@extends('components.layout.root')
+@extends('components.layout.auth')
+
+@section('title') Leave Request #{{ $leave->id }} @endsection
 
 @section('content')
 <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto" x-cloak x-data="{ previewImage: null, isPdf: false }">
