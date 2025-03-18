@@ -22,9 +22,9 @@ class DocumentFactory extends Factory
         return [
             'employee_id' => Employee::factory(),
             'updated_by' => Employee::factory(),
-            'document_type' => fake()->randomElement(DocumentType::cases()),
-            'status' => fake()->randomElement(RequestStatus::cases()),
-            'file_path' => fake()->filePath(),
+            'document_type' => $this->faker->randomElement(DocumentType::cases()),
+            'status' => $this->faker->randomElement(RequestStatus::cases()),
+            'file_path' => $this->faker->filePath(),
         ];
     }
 }

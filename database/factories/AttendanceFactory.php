@@ -26,7 +26,7 @@ class AttendanceFactory extends Factory
         return [
             'employee_id' => Employee::factory(),
             'updated_by' => Employee::factory(),
-            'status' => fake()->randomElement(RequestStatus::cases()),
+            'status' => $this->faker->randomElement(RequestStatus::cases()),
             'shift_type' => $this->faker->randomElement(ShiftType::cases()),
             'type' => $this->faker->randomElement(AttendanceType::cases()),
             'work_mode' => $this->faker->randomElement(WorkMode::cases()),

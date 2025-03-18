@@ -2,6 +2,7 @@
 
 use App\Enums\AttendanceStatus;
 use App\Enums\Department;
+use App\Enums\DepartmentTeam;
 use App\Enums\EmployeeStatus;
 use App\Enums\EmploymentType;
 use App\Enums\Gender;
@@ -29,6 +30,11 @@ return new class extends Migration {
             $table->string('position')->nullable();
             $table->enum('status', EmployeeStatus::values())->default(EmployeeStatus::ACTIVE->value);
             $table->enum('attendance_status', AttendanceStatus::values());
+            $table->enum('department_team', DepartmentTeam::values());
+            $table->integer('group_number')->nullable();
+            $table->date('date_of_start');
+            $table->date('date_of_orientation_day');
+            $table->string('e_signature_path');
             $table->timestamps();
         });
     }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('request_date');
             $table->enum('work_type', WorkType::values());
             $table->enum('shift_request', ShiftRequest::values());
-            $table->text('reason')->nullable();
+            $table->text('reason');
             $table->enum('status', RequestStatus::values())->default(RequestStatus::PENDING->value);
             $table->string('proof_of_team_leader_approval');
             $table->string('proof_of_group_leader_approval');
