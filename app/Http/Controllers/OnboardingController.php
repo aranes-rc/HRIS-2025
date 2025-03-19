@@ -178,8 +178,8 @@ class OnboardingController extends Controller
         // Store validated data in session
         $request->session()->put('onboarding_data.ojt', $validated);
         
-        // Process final submission
-        return $this->completeOnboarding($request);
+        // Move to step 6
+        return redirect()->route('onboarding.step6');
     }
     
     public function showStep6(Request $request)

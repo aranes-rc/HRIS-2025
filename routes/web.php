@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\UserRoleSwitchController;
 use App\Http\Controllers\WorkRequestController;
 use Illuminate\Http\Request;
@@ -18,6 +19,30 @@ Route::middleware(['guest'])->group(function () {
     Route::post(
         '/authenticate', [LoginController::class, 'authenticate']
     )->name('authenticate');
+
+    Route::get('/register', function () {
+        return redirect()->route('onboarding.step1');
+    })->name('onboarding');
+
+    Route::get('/register/step1', [OnboardingController::class, 'showStep1'])->name('onboarding.step1');
+    Route::post('/register/step1', [OnboardingController::class, 'processStep1']);
+    
+    Route::get('/register/step2', [OnboardingController::class, 'showStep2'])->name('onboarding.step2');
+    Route::post('/register/step2', [OnboardingController::class, 'processStep2']);
+    
+    Route::get('/register/step3', [OnboardingController::class, 'showStep3'])->name('onboarding.step3');
+    Route::post('/register/step3', [OnboardingController::class, 'processStep3']);
+    
+    Route::get('/register/step4', [OnboardingController::class, 'showStep4'])->name('onboarding.step4');
+    Route::post('/register/step4', [OnboardingController::class, 'processStep4']);
+    
+    Route::get('/register/step5', [OnboardingController::class, 'showStep5'])->name('onboarding.step5');
+    Route::post('/register/step5', [OnboardingController::class, 'processStep5']);
+    
+    Route::get('/register/step6', [OnboardingController::class, 'showStep6'])->name('onboarding.step6');
+    Route::post('/register/step6', [OnboardingController::class, 'processStep6']);
+    
+    Route::post('/register/cancel', [OnboardingController::class, 'cancel'])->name('onboarding.cancel');
 });
 
 
