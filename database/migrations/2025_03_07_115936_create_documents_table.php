@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constrained('employees');
-            $table->foreignId('updated_by')->constrained('employees');
+            $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->string('document_type')->default(DocumentType::OTHER->value);
             $table->string('status')->default(RequestStatus::PENDING->value);
             $table->string('file_path');

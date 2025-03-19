@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained('employees')->cascadeOnDelete();
-            $table->foreignId('updated_by')->constrained('employees');
+            $table->foreignId('updated_by')->nullable()->constrained('employees')->onDelete('set null');
             $table->string('status')->default(RequestStatus::PENDING->value);
             $table->enum('shift_type', ShiftType::values());
             $table->enum('type', AttendanceType::values());

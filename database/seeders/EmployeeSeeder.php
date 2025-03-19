@@ -3,8 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
+use App\Models\EducationInformation;
 use App\Models\Employee;
+use App\Models\FamilyInformation;
+use App\Models\OjtInformation;
 use App\Models\User;
 
 class EmployeeSeeder extends Seeder
@@ -17,7 +21,10 @@ class EmployeeSeeder extends Seeder
         $users = User::all();
 
         foreach ($users as $user) {
-            Employee::factory()->create(['user_id' => $user->id]);
+            $employee = Employee::factory()->create(['user_id' => $user->id]);
+            FamilyInformation::factory()->create(['employee_id' => $employee->id]);
+            EducationInformation::factory()->create(['employee_id' => $employee->id]);
+            OjtInformation::factory()->create(['employee_id' => $employee->id]);
         }
     }
 }

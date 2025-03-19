@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AttendanceStatus;
 use App\Enums\Department;
+use App\Enums\DepartmentTeam;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\Gender;
@@ -28,9 +29,13 @@ class Employee extends Model
         'hire_date',
         'employment_type',
         'department',
-        'position',
         'status',
         'attendance_status',
+        'department_team',
+        'group_number',
+        'date_of_start',
+        'date_of_orientation_day',
+        'e_signature_path'
     ];
 
     protected $casts = [
@@ -39,6 +44,7 @@ class Employee extends Model
         'employment_type' => EmploymentType::class,
         'status' => EmployeeStatus::class,
         'attendance_status' => AttendanceStatus::class,
+        'department_team' => DepartmentTeam::class,
     ];
 
     protected $attributes = [
