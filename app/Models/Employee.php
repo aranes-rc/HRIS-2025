@@ -29,7 +29,6 @@ class Employee extends Model
         'hire_date',
         'employment_type',
         'department',
-        'position',
         'status',
         'attendance_status',
         'department_team',

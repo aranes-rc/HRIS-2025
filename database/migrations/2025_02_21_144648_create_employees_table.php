@@ -27,7 +27,6 @@ return new class extends Migration {
             $table->date('hire_date');
             $table->enum('employment_type', EmploymentType::values());
             $table->enum('department', Department::values());
-            $table->string('position')->nullable();
             $table->enum('status', EmployeeStatus::values())->default(EmployeeStatus::ACTIVE->value);
             $table->enum('attendance_status', AttendanceStatus::values());
             $table->enum('department_team', DepartmentTeam::values());
