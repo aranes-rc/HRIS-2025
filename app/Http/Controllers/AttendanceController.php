@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Enums\UserRole;
 use App\Models\Attendance;
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceType;
 use App\Enums\Department;
 use App\Enums\DepartmentTeam;
 use App\Enums\EmploymentType;
+use App\Enums\RequestStatus;
 use App\Enums\ShiftType;
 use App\Enums\WorkMode;
 use App\Http\Requests\StoreAttendanceRequest;
@@ -30,6 +31,8 @@ class AttendanceController extends Controller
     
     public function index(Request $request)
     {
+        
+
         $validated = $request->validate([
             'date_from' => 'sometimes|date|before_or_equal:date_to',
             'date_to' => 'sometimes|date|after_or_equal:date_from',
@@ -39,16 +42,31 @@ class AttendanceController extends Controller
             'work_mode' => 'sometimes|in:' . implode(',', WorkMode::values()),
             'group_by' => 'sometimes|in:employee,date,shift_type',
         ]);
+        
 
         $query = Attendance::with('Employee')
             ->when($request->user()->isEmployee(), fn($q) => $q->where('employee_id', $request->user()->id))
             ->filter($validated)
             ->groupedData($validated['group_by'] ?? null)
             ->latest();
-
+            
         $attendances = $query->paginate(15);
+        $totalPresent = Attendance::where('status', AttendanceStatus::PRESENT)->count() ?? 0;
+        $totalAbsent = Attendance::where('status', AttendanceStatus::ABSENT)->count() ?? 0;
+        $totalLeave = Attendance::where('status', AttendanceStatus::LEAVE)->count() ?? 0;
+        
+        $attendances = Attendance::orderBy('created_at')->get();
+        $dates = $attendances->pluck('created_at')->map(fn($date) => $date->format('Y-m-d'))->toArray();
+        $counts = $attendances->pluck('attendance_count')->toArray();
 
-        return response(view('attendance.index', compact("attendances")));
+        $role = $request->user()->getActiveRole();        
+        $roleView = match ($role) {            
+            UserRole::EMPLOYEE->value => view('attendance.index.employee', compact('attendances')),            
+            UserRole::HR->value => view('attendance.index.hr', compact('attendances', 'totalPresent','totalAbsent','totalLeave')),          
+            UserRole::ADMIN->value => view('attendance.index.admin', compact('attendances', 'totalPresent','totalAbsent','totalLeave','dates', 'counts')),            default => abort(403),        };            
+            return $roleView;
+        
+    
     }
 
     public function create(Request $request)
