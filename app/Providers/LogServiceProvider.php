@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Providers;
+
 use App\Models\Attendance;
 use App\Models\CharacterReference;
 use App\Models\Document;
@@ -7,6 +9,7 @@ use App\Models\EducationInformation;
 use App\Models\Employee;
 use App\Models\FamilyInformation;
 use App\Models\LeaveRequest;
+use App\Models\Log;
 use App\Models\OjtInformation;
 use App\Models\User;
 use App\Models\WorkRequest;
@@ -20,6 +23,8 @@ use App\Observers\LeaveRequestObserver;
 use App\Observers\OjtInformationObserver;
 use App\Observers\UserObserver;
 use App\Observers\WorkRequestObserver;
+use App\Policies\LogPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class LogServiceProvider extends ServiceProvider
@@ -36,7 +41,14 @@ class LogServiceProvider extends ServiceProvider
      * Bootstrap services.
      */
     public function boot(): void
-    {    
+    {
+        Gate::policy(Log::class, LogPolicy::class);
+
+        self::setupObservers();
+    }
+
+    private function setupObservers(): void
+    {
         Attendance::observe(AttendanceObserver::class);
         CharacterReference::observe(CharacterReferenceObserver::class);
         Document::observe(DocumentObserver::class);
