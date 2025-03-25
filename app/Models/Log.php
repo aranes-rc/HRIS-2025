@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\LogAction;
 use Illuminate\Database\Eloquent\Model;
 
 class Log extends Model
 {
+    protected $casts = [
+        'action' => LogAction::class
+    ];
+    
     protected $fillable = [
         'employee_id', 
         'action', 
