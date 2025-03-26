@@ -14,8 +14,8 @@ describe('DocumentController as Admin', function () {
         Storage::fake('public');
         
         $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
-        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can view all documents', function () {
@@ -148,8 +148,8 @@ describe('DocumentController as HR', function () {
         Storage::fake('public');
         
         $user = User::factory()->create(['roles' => [UserRole::HR->value]]);
-        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can view all documents', function () {
@@ -184,8 +184,8 @@ describe('DocumentController as Employee', function () {
         Storage::fake('public');
         
         $user = User::factory()->create(['roles' => [UserRole::EMPLOYEE->value]]);
-        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can only view own documents', function () {

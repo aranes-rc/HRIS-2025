@@ -16,8 +16,8 @@ use Mockery\MockInterface;
 describe('Attendance Controller as Admin', function () {
     beforeEach(function () {
         $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
-        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can filter attendances by date and type', function () {

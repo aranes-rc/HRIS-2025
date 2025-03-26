@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 beforeEach(function () {
     Storage::fake('public');
     $this->employeeUser = User::factory()->create(['roles' => [UserRole::EMPLOYEE->value]]);
+    $this->actingAs($this->employeeUser);
     $this->employee = Employee::factory()->create(['user_id' => $this->employeeUser->id]);
     
     $this->leaveData = [
@@ -30,8 +31,8 @@ beforeEach(function () {
 describe('LeaveRequestController as Admin', function () {
     beforeEach(function () {
         $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
-        $this->adminEmployee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->adminEmployee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can view all leave requests', function () {
@@ -76,8 +77,8 @@ describe('LeaveRequestController as Admin', function () {
 describe('LeaveRequestController as HR', function () {
     beforeEach(function () {
         $user = User::factory()->create(['roles' => [UserRole::HR->value]]);
-        $this->hrEmployee = Employee::factory()->create(['user_id' => $user->id]);
         $this->actingAs($user);
+        $this->hrEmployee = Employee::factory()->create(['user_id' => $user->id]);
     });
 
     it('can view all leave requests', function () {

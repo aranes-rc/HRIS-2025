@@ -3,13 +3,19 @@
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceType;
 use App\Enums\ShiftType;
+use App\Enums\UserRole;
 use App\Enums\WorkMode;
 use App\Models\Attendance;
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 describe('Attendance Model', function () {
     beforeEach(function () {
+        $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
+        $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
+        
         $this->attendance = Attendance::factory()->create(['type' => AttendanceType::TIME_OUT]);
     });
 
@@ -42,8 +48,11 @@ describe('Attendance Model', function () {
     });
 
     it('applies grouped data scope correctly', function () {
-        $employee = Employee::factory()->create();
-        Attendance::factory()->count(3)->create(['employee_id' => $employee->id]);
+        $anotherUser = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
+        $this->actingAs($anotherUser);
+        $otherEmployee = Employee::factory()->create(['user_id' => $anotherUser->id]);
+
+        Attendance::factory()->count(3)->create(['employee_id' => $otherEmployee->id]);
 
         $grouped = Attendance::groupedData('employee')->get();
 
