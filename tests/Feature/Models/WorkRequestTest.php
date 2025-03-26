@@ -4,9 +4,17 @@ use App\Models\WorkRequest;
 use App\Models\Employee;
 use App\Enums\RequestStatus;
 use App\Enums\ShiftRequest;
+use App\Enums\UserRole;
 use App\Enums\WorkType;
+use App\Models\User;
 
 describe('WorkRequest Model', function () {
+    beforeEach(function () {
+        $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
+        $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
+    });
+    
     it('has expected fillable attributes', function () {
         $workRequest = new WorkRequest();
         
@@ -37,11 +45,11 @@ describe('WorkRequest Model', function () {
     });
     
     it('can create a work request with factory', function () {
-        $employee = Employee::factory()->create();
-        $updatedBy = Employee::factory()->create();
+        $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
+        $updatedBy = Employee::factory()->create(['user_id' => $user->id]);
         
         $workRequest = WorkRequest::factory()->create([
-            'employee_id' => $employee->id,
+            'employee_id' => $this->employee->id,
             'updated_by' => $updatedBy->id,
             'work_type' => WorkType::values()[0],
             'shift_request' => ShiftRequest::values()[0],
@@ -51,28 +59,26 @@ describe('WorkRequest Model', function () {
         $this->assertInstanceOf(WorkRequest::class, $workRequest);
         $this->assertDatabaseHas('work_requests', [
             'id' => $workRequest->id,
-            'employee_id' => $employee->id,
+            'employee_id' => $this->employee->id,
             'updated_by' => $updatedBy->id,
         ]);
     });
     
     describe('Relationships', function () {
         it('belongs to an employee', function () {
-            $employee = Employee::factory()->create();
             $workRequest = WorkRequest::factory()->create([
-                'employee_id' => $employee->id
+                'employee_id' => $this->employee->id
             ]);
             
             expect($workRequest->employee)->toBeInstanceOf(Employee::class);
-            expect($workRequest->employee->id)->toBe($employee->id);
+            expect($workRequest->employee->id)->toBe($this->employee->id);
         });
         
         it('belongs to an updated_by employee', function () {
-            $employee = Employee::factory()->create();
             $updatedBy = Employee::factory()->create();
             
             $workRequest = WorkRequest::factory()->create([
-                'employee_id' => $employee->id,
+                'employee_id' => $this->employee->id,
                 'updated_by' => $updatedBy->id
             ]);
             

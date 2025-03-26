@@ -2,23 +2,29 @@
 
 use App\Enums\DocumentType;
 use App\Enums\RequestStatus;
+use App\Enums\UserRole;
 use App\Models\Document;
 use App\Models\Employee;
+use App\Models\User;
 
 describe('Document Model', function () {
+    beforeEach(function () {
+        $user = User::factory()->create(['roles' => [UserRole::ADMIN->value]]);
+        $this->actingAs($user);
+        $this->employee = Employee::factory()->create(['user_id' => $user->id]);
+    });
+
     it('can be created with valid attributes', function () {
-        $employee = Employee::factory()->create();
-        
         $document = Document::create([
-            'employee_id' => $employee->id,
-            'updated_by' => $employee->id,
+            'employee_id' => $this->employee->id,
+            'updated_by' => $this->employee->id,
             'document_type' => DocumentType::RESUME,
             'status' => RequestStatus::PENDING,
             'file_path' => 'documents/test.pdf',
         ]);
         
         expect($document)->toBeInstanceOf(Document::class)
-            ->and($document->employee_id)->toBe($employee->id)
+            ->and($document->employee_id)->toBe($this->employee->id)
             ->and($document->document_type)->toBe(DocumentType::RESUME)
             ->and($document->status)->toBe(RequestStatus::PENDING)
             ->and($document->file_path)->toBe('documents/test.pdf');
@@ -43,23 +49,21 @@ describe('Document Model', function () {
     });
     
     it('belongs to an employee', function () {
-        $employee = Employee::factory()->create();
         $document = Document::factory()->create([
-            'employee_id' => $employee->id,
+            'employee_id' => $this->employee->id,
         ]);
         
         expect($document->employee)->toBeInstanceOf(Employee::class)
-            ->and($document->employee->id)->toBe($employee->id);
+            ->and($document->employee->id)->toBe($this->employee->id);
     });
     
     it('belongs to an updater employee', function () {
-        $employee = Employee::factory()->create();
         $document = Document::factory()->create([
-            'updated_by' => $employee->id,
+            'updated_by' => $this->employee->id,
         ]);
         
         expect($document->updatedBy)->toBeInstanceOf(Employee::class)
-            ->and($document->updatedBy->id)->toBe($employee->id);
+            ->and($document->updatedBy->id)->toBe($this->employee->id);
     });
     
     describe('Status Methods', function () {
