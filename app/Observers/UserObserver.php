@@ -13,7 +13,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        $userInSession = request()->user();
+        $userInSession = auth()->user();
 
         if (isset($userInSession)) {
             $updaterEmployee = $userInSession->employee;
@@ -34,7 +34,7 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        $updaterEmployee = request()->user()->employee;
+        $updaterEmployee = auth()->user()->employee;
         $updaterEmployeeId = $updaterEmployee->id;
         $updaterName = $updaterEmployee->getFullName();
 
@@ -51,7 +51,7 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        $updaterEmployee = request()->user()->employee;
+        $updaterEmployee = auth()->user()->employee;
         $updaterEmployeeId = $updaterEmployee->id;
         $updaterName = $updaterEmployee->getFullName();
 

@@ -1,19 +1,22 @@
 <?php
 
+use App\Enums\UserRole;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 describe('Login Controller', function () {
     beforeEach(function () {
-        $this->user = User::create([
+        $this->user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
-            'role' => 'admin',
-            'status' => 'active'
+            'roles' => [UserRole::ADMIN->value],
         ]);
+        $this->actingAs($this->user);
         $this->employee = Employee::factory()->create(['user_id' => $this->user->id]);
+        Auth::logout();
     });
 
     it('logging in with incorrect details returns errors', function () {
