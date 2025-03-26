@@ -17,7 +17,7 @@ class AttendanceObserver
     {
         $employeeName = $attendance->employee->getFullName();
         $attendanceType = AttendanceType::getLabel($attendance->type);
-        $shiftType = ShiftType::getLabel($attendance->shiftType);
+        $shiftType = ShiftType::getLabel($attendance->shift_type);
 
         ActionLogger::log(
             employeeId: $attendance->employee_id,

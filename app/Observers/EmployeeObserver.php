@@ -13,7 +13,7 @@ class EmployeeObserver
      */
     public function created(Employee $employee): void
     {
-        $userId = request()->user()->id;
+        $userId = auth()->user()->id;
         $employeeName = $employee->getFullName();
 
         ActionLogger::log(
@@ -29,7 +29,7 @@ class EmployeeObserver
      */
     public function updated(Employee $employee): void
     {
-        $updaterEmployee = request()->user()->employee;
+        $updaterEmployee = auth()->user()->employee;
         $updaterEmployeeId = $updaterEmployee->id;
         $updaterName = $updaterEmployee->getFullName();
         $employeeName = $employee->getFullName();
@@ -47,7 +47,7 @@ class EmployeeObserver
      */
     public function deleted(Employee $employee): void
     {
-        $updaterEmployee = request()->user()->employee;
+        $updaterEmployee = auth()->user()->employee;
         $updaterEmployeeId = $updaterEmployee->id;
         $updaterName = $updaterEmployee->getFullName();
         $employeeName = $employee->getFullName();
