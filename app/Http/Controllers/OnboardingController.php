@@ -6,6 +6,7 @@ use App\Enums\Department;
 use App\Enums\DepartmentTeam;
 use App\Enums\EmploymentType;
 use App\Enums\Gender;
+use App\Enums\MaritalStatus;
 use App\Models\User;
 use App\Models\Employee;
 use App\Models\FamilyInformation;
@@ -36,22 +37,22 @@ class OnboardingController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => [
-                'required',
-                'confirmed',
-                Password::min(8)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
-                    ->symbols()
-                    ->uncompromised()
-            ],
             'contact_number' => 'required|string|max:20',
             'birthdate' => 'required|date',
             'gender' => 'required|in:' . implode(',', Gender::values()),
             'address' => 'required|string',
-            'emergency_contact_name' => 'required|string|max:255',
-            'emergency_contact_number' => 'required|string|max:20',
+            // 'password' => [
+            //     'required',
+            //     'confirmed',
+            //     Password::min(8)
+            //         ->letters()
+            //         ->mixedCase()
+            //         ->numbers()
+            //         ->symbols()
+            //         ->uncompromised()
+            // ],
+            // 'emergency_contact_name' => 'required|string|max:255',
+            // 'emergency_contact_number' => 'required|string|max:20',
         ]);
 
         // Store validated data in session
@@ -81,7 +82,7 @@ class OnboardingController extends Controller
             'mother_name' => 'nullable|string|max:255',
             'mother_occupation' => 'nullable|string|max:255',
             'number_of_children' => 'nullable|integer|min:0',
-            'marital_status' => 'required|string',
+            'marital_status' => 'nullable|string',
             'spouse_name' => 'nullable|string|max:255',
             'spouse_occupation' => 'nullable|string|max:255',
             'number_of_children' => 'nullable|integer|min:0',

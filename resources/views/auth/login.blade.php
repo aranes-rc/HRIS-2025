@@ -62,7 +62,7 @@
 
                     <p class="mt-10 text-center text-sm/6 text-gray-500">
                         Don't have an account?
-                        <a href="#" class="font-semibold text-primary/80 hover:text-primary-500">Sign up now</a>
+                        <a href="{{ route('onboarding.step1') }}" class="font-semibold text-primary/80 hover:text-primary-500">Sign up now</a>
                     </p>
                 </div>
             </div>
