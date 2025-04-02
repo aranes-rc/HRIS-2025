@@ -91,13 +91,13 @@
     <!-- User Profile and Logout -->
     <div class="mt-auto border-t border-slate-700">
         <!-- User Profile -->
-        <div class="flex items-center p-4 hover:bg-slate-700 rounded-md transition-colors">
+        <a href="{{ route('profile') }}" class="flex items-center p-4 hover:bg-slate-700 {{ (request()->routeIs('profile') || request()->routeIs('profile.*')) ? 'bg-accent1 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white' }}  rounded-md transition-colors">
             <img class="h-8 w-8 rounded-full flex-shrink-0" src="https://ui-avatars.com/api/?name={{ str_replace(' ', '+', auth()->user()->employee->getFullName()) }}" alt="User avatar">
             <div class="ml-3 overflow-hidden" x-show="open" x-transition>
                 <p class="text-sm font-medium text-white whitespace-nowrap">{{ auth()->user()->employee->getFullName() }}</p>
                 <p class="text-xs text-gray-400 whitespace-nowrap">View Profile</p>
             </div>
-        </div>
+        </a>
 
         
         @if(count(auth()->user()->roles) > 1)

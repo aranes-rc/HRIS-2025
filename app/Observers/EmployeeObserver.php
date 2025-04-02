@@ -13,15 +13,19 @@ class EmployeeObserver
      */
     public function created(Employee $employee): void
     {
-        $userId = auth()->user()->id;
-        $employeeName = $employee->getFullName();
+        $user = auth()->user();
 
-        ActionLogger::log(
-            employeeId: $employee->id,
-            action: LogAction::CREATE,
-            description: "User [$userId] created an employee named $employeeName with ID #{$employee->id}",
-            model: $employee,
-        );
+        if (isset($user)) {
+            $userId = $user->id;
+            $employeeName = $employee->getFullName();
+    
+            ActionLogger::log(
+                employeeId: $employee->id,
+                action: LogAction::CREATE,
+                description: "User [$userId] created an employee named $employeeName with ID #{$employee->id}",
+                model: $employee,
+            );
+        }
     }
 
     /**

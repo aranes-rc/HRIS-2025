@@ -60,6 +60,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         };
     })->name("dashboard");
 
+    Route::get("/profile", function () {
+        return view("profile.index");
+    })->name("profile");
+
     Route::get("/logout", [LoginController::class, 'logout'])->name("logout");
         
     Route::resource('attendance', AttendanceController::class);

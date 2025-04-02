@@ -70,4 +70,24 @@ class Employee extends Model
     {
         return $this->first_name." ".$this->last_name;
     }
+
+    public function characterReferences()
+    {
+        return $this->hasOne(CharacterReference::class);
+    }
+
+    public function educationInformation()
+    {
+        return $this->hasOne(EducationInformation::class);
+    }
+
+    public function familyInformation()
+    {
+        return $this->hasOne(FamilyInformation::class);
+    }
+
+    public function ojtInformation()
+    {
+        return $this->hasOne(OjtInformation::class);
+    }
 }

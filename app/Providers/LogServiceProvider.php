@@ -49,6 +49,8 @@ class LogServiceProvider extends ServiceProvider
 
     private function setupObservers(): void
     {
+        // MOVE THIS INSIDE CONTROLLERS INSTEAD HERE.
+        // THIS INVALIDATES SEEDING.
         Attendance::observe(AttendanceObserver::class);
         CharacterReference::observe(CharacterReferenceObserver::class);
         Document::observe(DocumentObserver::class);
