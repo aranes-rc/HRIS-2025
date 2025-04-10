@@ -24,4 +24,14 @@ enum UserRole: string
             default => ucfirst($case->value)
         };
     }
+
+    public static function options()
+    {
+        $dict = array();
+        foreach (self::cases() as $case) {
+            $dict[$case->value] = self::getLabel($case);
+        }
+
+        return $dict;
+    }
 }
