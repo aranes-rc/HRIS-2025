@@ -51,18 +51,19 @@ class LeaveRequest extends Model
 
     public function scopeFilter($query, array $filters)
     {
-        return $query->when($filters['leave_type'] ?? null, fn($q, $type) =>
+        return $query
+        ->when($filters['leave_type'] ?? null, fn($q, $type) =>
             $q->where('leave_type', $type))
-            ->when($filters['status'] ?? null, fn($q, $status) =>
+        ->when($filters['status'] ?? null, fn($q, $status) =>
             $q->where('status', $status))
-            ->when($filters['start_date'] ?? null, fn($q, $date) =>
+        ->when($filters['start_date'] ?? null, fn($q, $date) =>
             $q->where('start_date', '>=', $date))
-            ->when($filters['end_date'] ?? null, fn($q, $date) =>
+        ->when($filters['end_date'] ?? null, fn($q, $date) =>
             $q->where('end_date', '<=', $date))
-            ->when($filters['user_id'] ?? null, fn($q, $userId) =>
+        ->when($filters['user_id'] ?? null, fn($q, $userId) =>
             $q->where('user_id', $userId));
     }
-
+    
     public function isPending()
     {
         return $this->status == RequestStatus::PENDING;
@@ -77,4 +78,24 @@ class LeaveRequest extends Model
     {
         return $this->status == RequestStatus::APPROVED;
     }
+
+    public static function countPending()
+    {
+        return self::where('status', RequestStatus::PENDING)->count();
+    }
+
+    public static function countApproved()
+    {
+        return self::where('status', RequestStatus::APPROVED)->count();
+    }
+    public static function countRejected()
+    {
+        return self::where('status', RequestStatus::REJECTED)->count();
+    }
+    public static function showPending()
+    {
+        return self::where('status', 'pending')->get();
+    }
+
+    
 }

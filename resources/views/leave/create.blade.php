@@ -9,37 +9,37 @@
 @section('title') Create Leave Request @endsection
 
 @section('content')
-<div class="py-6 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">New Leave Request</h1>
-        <p class="mt-1 text-sm text-gray-600">Submit a new leave request for approval.</p>
-    </div>
+<div class=" sm:px-6 lg:px-8 max-w-5xl mx-auto">
+    <div class="bg-white shadow-sm rounded-lg p-10">
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">New Leave Request</h1>
+                <p class="mt-2 text-sm text-gray-600">Submit a new leave request for approval.</p>
+            </div>
+            <a href="{{ route('leave.index') }}">
+                <x-button class="p-3" text="Back to List" containerColor="primary" contentColor="white" />
+            </a>
+        </div>
+        <p>Request Information</p>
+        <hr class="mt-2">
 
-    <div class="bg-white shadow-sm rounded-lg p-6">
-        <form action="{{ route('leave.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('leave.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
-
             <!-- Employee Information (readonly) -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 mt-6">
                 <div>
-                    <x-form.label name="employee_name" label="Employee" />
-                    <div class="mt-2">
-                        <input type="text" readonly value="{{ $employee->getFullName(); }}"
-                            class="block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
-                    </div>
+                    <x-form.input type="text" name="employee_name" label="Employee" required />
                 </div>
 
                 <div>
-                    <x-form.label name="department" label="Department" />
-                    <div class="mt-2">
-                        <input type="text" readonly
-                            value="{{ Department::getLabel($employee->department) ?? 'Not Assigned' }}"
-                            class="block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
-                    </div>
+                    <x-form.select class="h-9" containerColor="primary" type="select" name="department" label="Department" required>
+                        <option value="" selected disabled hidden>Choose an option</option> 
+                        @foreach (Department::values() as $key => $value)
+                            <option value="{{ $value }}" {{ old('department') == $value ? 'selected' : '' }}>{{ ucfirst($value) }}</option>
+                        @endforeach
+                    </x-form.select>
                 </div>
             </div>
-
-            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
             <!-- Leave Type -->
             <div x-data="{ leaveType: '{{ old('leave_type') }}' }">
@@ -71,25 +71,25 @@
                 </div>
 
                 <!-- Reason -->
-                <div class="mt-6">
+                <div class="mt-4">
                     <x-form.label name="reason" label="Reason for Leave" />
                     <div class="mt-2">
-                        <textarea id="reason" name="reason" rows="4" required
-                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-                            placeholder="Please provide details about your leave request...">{{ old('reason') }}</textarea>
+                        <textarea id="reason" name="reason" rows="3" required
+                            class="p-2 text-gray-600 text-sm block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:outline-primary/30 focus:ring-opacity-50"
+                            placeholder="State the reason for your leave.">{{ old('reason') }}</textarea>
                     </div>
                     <x-form.error name="reason" />
                 </div>
 
                 <!-- Shift Coverage -->
                 <div class="mt-6">
-                    <x-form.label name="shift_covered" label="Shift Coverage" />
+                    <x-form.label name="shift_covered" label="Shift Coverage"/>
 
                     <fieldset>
-                        <legend class="sr-only">
+                        <legend class="sr-only ">
                             Shift Covered
                         </legend>
-                        <div class="space-y-5 mt-3">
+                        <div class="space-x-10 flex mt-3">
                             @foreach (ShiftType::options() as $key => $value)
                                 <div class="flex gap-3">
                                     <div class="flex h-6 shrink-0 items-center">
@@ -125,6 +125,10 @@
                 </div>
 
                 <!-- Required Proof Documents -->
+                <div class="mt-6 text-1xl mb-2">Attachments</div>
+                <hr>
+                {{-- <p>Accepting image format file only.</p> --}}
+
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 mt-6">
                     <x-form.file label="Proof of Leader Approval" name="proof_of_leader_approval"
                         accept=".jpeg,.jpg,.png" required />
@@ -143,16 +147,21 @@
 
                 <!-- Submit Buttons -->
                 <div class="flex justify-end space-x-3 pt-6 border-t mt-6">
-                    <a href="{{ route('leave.index') }}">
-                        <x-button text="Cancel" containerColor="gray-200" contentColor="gray-700" size="md"
-                            roundness="md" />
-                    </a>
 
                     <x-button type="submit" text="Submit Request" containerColor="primary" contentColor="white"
                         size="md" roundness="md" />
                 </div>
             </div>
         </form>
+        <div class="flex justify-end mr-35 -mt-8">
+            <a href="{{ route('leave.index') }}" onclick="event.preventDefault(); 
+                if (confirm('Are you sure you want to go back without completing the request?')) {
+                    window.location.href = '{{ route('leave.index') }}';
+                }">
+                <x-button text="Cancel" containerColor="gray-200" contentColor="gray-700" size="md" roundness="md" />
+            </a>
+
+        </div>
     </div>
 </div>
 @endsection
