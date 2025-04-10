@@ -85,6 +85,19 @@
                     <span class="ml-3 whitespace-nowrap" x-show="open" x-transition>Work Requests</span>
                 </a>
             </li>
+            
+            @if(auth()->user()->getActiveRole() == UserRole::ADMIN->value)
+                <!-- Work Requests -->
+                <li class="mb-1">
+                    <a href="{{ route('users.index') }}" 
+                    class="flex items-center py-2 px-4 {{ (request()->routeIs('users') || request()->routeIs('users.*')) ? 'bg-accent1 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white' }} rounded-md transition-colors">
+                        <svg class="h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 21 21" stroke="currentColor">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M10.5 2.5a3 3 0 0 1 3 3v2a3 3 0 1 1-6 0v-2a3 3 0 0 1 3-3m7 14v-.728c0-3.187-3.686-5.272-7-5.272s-7 2.085-7 5.272v.728a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1"/>
+                        </svg>
+                        <span class="ml-3 whitespace-nowrap" x-show="open" x-transition>Manage Users</span>
+                    </a>
+                </li>
+            @endif
         </ul>
     </nav>
     
