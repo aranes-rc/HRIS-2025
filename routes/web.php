@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\UserRoleSwitchController;
 use App\Http\Controllers\WorkRequestController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -82,4 +83,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/role/switch', [UserRoleSwitchController::class, 'switch'])
         ->middleware('role.switch')
         ->name('role.switch');
+
+    Route::resource('users', UsersController::class)
+        ->middleware('role:admin');
 });

@@ -18,7 +18,7 @@ class CheckUserRole
     {
         $roles = empty($roles) ? [null] : $roles;
 
-        if (!in_array(Auth::user()->role->value, $roles)) {
+        if (!in_array(Auth::user()->getActiveRole(), $roles)) {
             abort(403, 'Forbidden');
         }
         
